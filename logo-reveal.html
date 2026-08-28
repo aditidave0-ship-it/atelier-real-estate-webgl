@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>H. Rishabraj — Logo Reveal</title>
+<style>
+  :root{
+    --blue: #17ABE2;
+    --bg: #ffffff;
+    --ink: #0f2a36;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    overflow:hidden;
+  }
+  .stage{
+    width:min(60vmin,420px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .logo-box{
+    width:100%;
+    aspect-ratio:1/1;
+    position:relative;
+  }
+  svg{
+    width:100%;
+    height:100%;
+    overflow:visible;
+    display:block;
+  }
+  .piece{
+    fill:var(--blue);
+    opacity:0;
+    transition:
+      x 0.75s cubic-bezier(.2,.8,.2,1),
+      y 0.75s cubic-bezier(.2,.8,.2,1),
+      width 0.75s cubic-bezier(.2,.8,.2,1),
+      height 0.75s cubic-bezier(.2,.8,.2,1),
+      opacity 0.3s ease-out;
+  }
+  .piece.pop{
+    animation: pop 0.4s ease-out;
+  }
+  @keyframes pop{
+    40%{ filter:brightness(1.4); }
+    100%{ filter:brightness(1); }
+  }
+
+  .intro-text{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:0 6%;
+    font-size:clamp(16px, 6.5vmin, 30px);
+    font-weight:600;
+    letter-spacing:.03em;
+    color:var(--ink);
+    opacity:0;
+    transform:scale(0.9);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+    pointer-events:none;
+  }
+  .intro-text.show{
+    opacity:1;
+    transform:scale(1);
+  }
+  .intro-text.burst{
+    opacity:0;
+    transform:scale(1.25);
+    transition: opacity 0.45s ease-in, transform 0.45s ease-in;
+  }
+
+  .wordmark{
+    margin-top:18px;
+    font-size:clamp(14px, 4.2vmin, 20px);
+    font-weight:600;
+    letter-spacing:.08em;
+    color:var(--ink);
+    opacity:0;
+    transform:translateY(6px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .wordmark.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  .replay-btn{
+    margin-top:30px;
+    padding:10px 22px;
+    border-radius:999px;
+    border:1.5px solid var(--blue);
+    background:transparent;
+    color:var(--blue);
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.02em;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+  }
+  .replay-btn:hover{
+    background:var(--blue);
+    color:#fff;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="logo-box">
+    <svg viewBox="0 0 200 200">
+      <rect class="piece" id="p1" data-final="0,0,46.5,97"      data-line="98.5,0,3,97"></rect>
+      <rect class="piece" id="p2" data-final="50.5,0,46.5,97"   data-line="98.5,0,3,97"></rect>
+      <rect class="piece" id="p3" data-final="103,0,97,46.5"    data-line="103,98.5,97,3"></rect>
+      <rect class="piece" id="p4" data-final="103,50.5,97,46.5" data-line="103,98.5,97,3"></rect>
+      <rect class="piece" id="p5" data-final="0,103,97,46.5"    data-line="0,98.5,97,3"></rect>
+      <rect class="piece" id="p6" data-final="0,156.5,97,46.5"  data-line="0,98.5,97,3"></rect>
+      <rect class="piece" id="p7" data-final="103,103,46.5,97"    data-line="98.5,103,3,97"></rect>
+      <rect class="piece" id="p8" data-final="153.5,103,46.5,97"  data-line="98.5,103,3,97"></rect>
+    </svg>
+    <div class="intro-text" id="introText">H. Rishabraj</div>
+  </div>
+  <div class="wordmark" id="wordmark">H. RISHABRAJ</div>
+</div>
+
+<button class="replay-btn" id="replayBtn">Replay</button>
+
+<script>
+  const introText = document.getElementById('introText');
+  const wordmark  = document.getElementById('wordmark');
+  const pieces = Array.from(document.querySelectorAll('.piece'));
+
+  function setAttrs(el, x, y, w, h){
+    el.style.x = x + 'px';
+    el.style.y = y + 'px';
+    el.style.width = w + 'px';
+    el.style.height = h + 'px';
+  }
+  function parse(str){ return str.split(',').map(Number); }
+
+  function reset(){
+    introText.classList.remove('show','burst');
+    wordmark.classList.remove('show');
+    pieces.forEach(p=>{
+      p.style.transition = 'none';
+      p.classList.remove('pop');
+      p.style.opacity = 0;
+      const [x,y,w,h] = parse(p.dataset.line);
+      setAttrs(p, x, y, w, h);
+    });
+    void document.body.offsetWidth;
+    pieces.forEach(p=> p.style.transition = '');
+  }
+
+  function play(){
+    reset();
+    setTimeout(()=> introText.classList.add('show'), 150);
+    const BURST_AT = 1500;
+    setTimeout(()=>{
+      introText.classList.remove('show');
+      introText.classList.add('burst');
+      pieces.forEach((p,i)=>{
+        setTimeout(()=>{ p.style.opacity = 1; }, i*40);
+      });
+    }, BURST_AT);
+    const FLY_AT = BURST_AT + 350;
+    setTimeout(()=>{
+      pieces.forEach((p,i)=>{
+        setTimeout(()=>{
+          const [x,y,w,h] = parse(p.dataset.final);
+          setAttrs(p, x, y, w, h);
+        }, i*45);
+      });
+    }, FLY_AT);
+    const SETTLE_AT = FLY_AT + (pieces.length-1)*45 + 800;
+    setTimeout(()=>{
+      pieces.forEach(p=> p.classList.add('pop'));
+      wordmark.classList.add('show');
+    }, SETTLE_AT);
+  }
+
+  document.getElementById('replayBtn').addEventListener('click', play);
+  window.addEventListener('load', play);
+</script>
+
+</body>
+</html>
