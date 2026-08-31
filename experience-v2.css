@@ -1,0 +1,19 @@
+/* Progressive cinematic layer inspired by the pacing of the supplied reference video. */
+.experience-v2 .cinematic-reveal{opacity:0;transform:translate3d(0,70px,0);transition:opacity .95s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0ms),transform 1.15s cubic-bezier(.16,1,.3,1) var(--reveal-delay,0ms)}
+.experience-v2 .cinematic-reveal.is-visible{opacity:1;transform:none}
+.experience-v2 .timeline{overflow:hidden}
+.experience-v2 .timeline-progress{position:absolute;left:0;right:0;top:13px;height:1px;background:var(--blue);transform:scaleX(0);transform-origin:left center;will-change:transform;z-index:2}
+.experience-v2 .milestone{transition:transform .55s cubic-bezier(.16,1,.3,1),opacity .55s}
+.experience-v2 .milestone:hover{transform:translateY(-8px)}
+.experience-v2 .project-card,.experience-v2 .completed-card,.experience-v2 .life-main,.experience-v2 .life-side,.experience-v2 .stories-feature{transition:transform .8s cubic-bezier(.16,1,.3,1),box-shadow .8s}
+.experience-v2 .project-card:hover,.experience-v2 .completed-card:hover,.experience-v2 .life-main:hover,.experience-v2 .life-side:hover{transform:translateY(-10px) scale(1.012);box-shadow:0 30px 70px rgba(8,20,27,.2)}
+.experience-v2 .redevelopment-cinematic{position:relative;overflow:hidden}
+.experience-v2 .redevelopment-cinematic:before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(23,171,226,.11) 49%,rgba(255,255,255,.12) 50%,transparent 62%);transform:translateX(-120%);transition:transform 1.8s cubic-bezier(.16,1,.3,1)}
+.experience-v2 .redevelopment-cinematic.is-active:before{transform:translateX(120%)}
+.experience-v2 .redevelopment-cinematic .transform-box:first-child{filter:saturate(.65) contrast(.95);transform:scale(.98);transition:filter 1.2s,transform 1.2s,opacity 1.2s}
+.experience-v2 .redevelopment-cinematic .transform-box:last-child{transform:scale(.94);opacity:.72;transition:transform 1.35s cubic-bezier(.16,1,.3,1),opacity 1.2s,filter 1.2s;filter:brightness(.82)}
+.experience-v2 .redevelopment-cinematic.is-active .transform-box:first-child{filter:saturate(.25) contrast(.9);opacity:.72}
+.experience-v2 .redevelopment-cinematic.is-active .transform-box:last-child{transform:scale(1);opacity:1;filter:brightness(1.08)}
+.experience-v2 .hero,.experience-v2 .project-label{will-change:transform,opacity}
+@media(max-width:760px){.experience-v2 .cinematic-reveal{transform:translate3d(0,38px,0)}.experience-v2 .project-card:hover,.experience-v2 .completed-card:hover,.experience-v2 .life-main:hover,.experience-v2 .life-side:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.experience-v2 .cinematic-reveal{opacity:1;transform:none;transition:none}.experience-v2 .redevelopment-cinematic:before{display:none}.experience-v2 *{scroll-behavior:auto!important}}
